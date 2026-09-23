@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { adminTest, authenticatedTest, clinicalTest } from '../controllers/testAccessController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requireRole } from '../middleware/authorizationMiddleware.js';
+import { ROLES } from '../utils/roles.js';
+const router = Router();
+router.get('/authenticated', requireAuth, authenticatedTest);
+router.get('/admin', requireAuth, requireRole(ROLES.ADMIN), adminTest);
+router.get('/clinical', requireAuth, requireRole(ROLES.ADMIN, ROLES.DOCTOR, ROLES.CAREGIVER), clinicalTest);
+export default router;

@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { getOne, remove, update } from '../controllers/questionController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requireQuestionAccess, requireRole } from '../middleware/authorizationMiddleware.js';
+import { ROLES } from '../utils/roles.js';
+import { validateQuestionIdParam, validateQuestionUpdate } from '../validators/gameValidator.js';
+const router = Router();
+router.use(requireAuth);
+router.get('/:questionId', validateQuestionIdParam, requireQuestionAccess, getOne);
+router.put('/:questionId', requireRole(ROLES.ADMIN), validateQuestionIdParam, requireQuestionAccess, validateQuestionUpdate, update);
+router.delete('/:questionId', requireRole(ROLES.ADMIN), validateQuestionIdParam, requireQuestionAccess, remove);
+export default router;

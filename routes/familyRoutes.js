@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { getOne, remove, update } from '../controllers/familyController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requireFamilyMemberAccess } from '../middleware/authorizationMiddleware.js';
+import { validateFamilyUpdate } from '../validators/familyValidator.js';
+import { validateObjectIdParam } from '../validators/resourceValidator.js';
+const router = Router();
+router.use(requireAuth);
+router.get('/:familyMemberId', validateObjectIdParam('familyMemberId'), requireFamilyMemberAccess, getOne);
+router.put('/:familyMemberId', validateObjectIdParam('familyMemberId'), requireFamilyMemberAccess, validateFamilyUpdate, update);
+router.delete('/:familyMemberId', validateObjectIdParam('familyMemberId'), requireFamilyMemberAccess, remove);
+export default router;

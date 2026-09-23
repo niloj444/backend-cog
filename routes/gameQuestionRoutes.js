@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { create, list } from '../controllers/questionController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requireGameAccess, requireRole } from '../middleware/authorizationMiddleware.js';
+import { ROLES } from '../utils/roles.js';
+import { validateGameIdParam, validateQuestionCreate } from '../validators/gameValidator.js';
+const router = Router({ mergeParams: true });
+router.use(requireAuth, validateGameIdParam, requireGameAccess);
+router.post('/', requireRole(ROLES.ADMIN), validateQuestionCreate, create);
+router.get('/', list);
+export default router;

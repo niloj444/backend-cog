@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { end, getOne, start } from '../controllers/gameSessionController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requireGameSessionAccess, requirePatientBodyAccess } from '../middleware/authorizationMiddleware.js';
+import { validateSessionIdParam, validateSessionStart } from '../validators/gameSessionValidator.js';
+const router = Router();
+router.post('/start', requireAuth, validateSessionStart, requirePatientBodyAccess, start);
+router.get('/:sessionId', requireAuth, validateSessionIdParam, requireGameSessionAccess, getOne);
+router.post('/:sessionId/end', requireAuth, validateSessionIdParam, requireGameSessionAccess, end);
+export default router;

@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { create, list } from '../controllers/familyController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requirePatientAccess } from '../middleware/authorizationMiddleware.js';
+import { validateFamilyCreate } from '../validators/familyValidator.js';
+import { validatePatientIdParam } from '../validators/resourceValidator.js';
+const router = Router({ mergeParams: true });
+router.use(requireAuth, validatePatientIdParam, requirePatientAccess);
+router.post('/', validateFamilyCreate, create);
+router.get('/', list);
+export default router;

@@ -1,0 +1,14 @@
+import { Router } from 'express';
+import { create, getOne, list, remove, update } from '../controllers/gameController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requireGameAccess, requireRole } from '../middleware/authorizationMiddleware.js';
+import { ROLES } from '../utils/roles.js';
+import { validateGameCreate, validateGameIdParam, validateGameUpdate } from '../validators/gameValidator.js';
+const router = Router();
+router.use(requireAuth);
+router.post('/', requireRole(ROLES.ADMIN), validateGameCreate, create);
+router.get('/', list);
+router.get('/:gameId', validateGameIdParam, requireGameAccess, getOne);
+router.put('/:gameId', requireRole(ROLES.ADMIN), validateGameIdParam, requireGameAccess, validateGameUpdate, update);
+router.delete('/:gameId', requireRole(ROLES.ADMIN), validateGameIdParam, requireGameAccess, remove);
+export default router;

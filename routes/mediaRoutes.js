@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { getOne, remove, upload } from '../controllers/mediaController.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
+import { requireMediaAccess, requireMediaUploadAccess, requireMediaUploadConsent } from '../middleware/authorizationMiddleware.js';
+import { uploadMediaFile } from '../middleware/uploadMiddleware.js';
+import { validateMediaUpload } from '../validators/mediaValidator.js';
+import { validateObjectIdParam } from '../validators/resourceValidator.js';
+const router = Router();
+router.post('/upload', requireAuth, uploadMediaFile, validateMediaUpload, requireMediaUploadAccess, requireMediaUploadConsent, upload);
+router.get('/:mediaId', requireAuth, validateObjectIdParam('mediaId'), requireMediaAccess, getOne);
+router.delete('/:mediaId', requireAuth, validateObjectIdParam('mediaId'), requireMediaAccess, remove);
+export default router;
